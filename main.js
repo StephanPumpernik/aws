@@ -13,7 +13,8 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 // thematische Layer
 let overlays = {
     stations: L.featureGroup(),
-    temperatur: L.featureGroup().addTo(map),
+    temperatur: L.featureGroup(),
+    wind: L.featureGroup().addTo(map),
 }
 
 // Layer control
@@ -28,6 +29,7 @@ L.control.layers({
 }, {
     "Wetterstationen": overlays.stations,
     "Temperatur": overlays.temperatur,
+    "Windgeschwindigkeit": overlays.wind,
 }).addTo(map);
 
 // Maßstab
@@ -42,23 +44,23 @@ async function loadStations(url) {
     let jsondata = await response.json();
 
     console.log(jsondata);
-    L.geoJSON (jsondata, { 
-   
-    pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: L.icon({
-                iconUrl: "icons/wifi.png",
-                iconAnchor: [16, 37],
-                popupAnchor: [0, -37]
+    L.geoJSON(jsondata, {
 
-            })
-        });
-    },
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: "icons/wifi.png",
+                    iconAnchor: [16, 37],
+                    popupAnchor: [0, -37]
 
-    onEachFeature: function (feature, layer) {
-        let pointINTime = new Date(feature.properties.date);
-        //console.log(pointINTime);
-        layer.bindPopup(`
+                })
+            });
+        },
+
+        onEachFeature: function (feature, layer) {
+            let pointINTime = new Date(feature.properties.date);
+            //console.log(pointINTime);
+            layer.bindPopup(`
             <h4> ${feature.properties.name} (${feature.geometry.coordinates[2]}m)</h4>
             <ul>
             <li>Lufttemperatur(C) ${feature.properties.LT !== undefined ? feature.properties.LT : "-"}</li>
@@ -71,23 +73,24 @@ async function loadStations(url) {
         `);
 
 
-    }
+        }
 
-}).addTo(overlays.stations)
-showTemperature(jsondata);
-    
+    }).addTo(overlays.stations)
+    showTemperature(jsondata);
+    showWind(jsondata);
+
 }
 loadStations("https://static.avalanche.report/weather_stations/stations.geojson");
 
 function showTemperature(jsondata) {
     //To do: darstellen von temperatur daten
     L.geoJSON(jsondata, {
-        filter: function(feature) {
+        filter: function (feature) {
             if (feature.properties.LT > -50 && feature.properties.LT < 50) {
                 return true;
             }
         },
-        pointToLayer: function(feature, latlng) {
+        pointToLayer: function (feature, latlng) {
             let color = getColor(feature.properties.LT, COLORS.temperature);
             return L.marker(latlng, {
                 icon: L.divIcon({
@@ -100,14 +103,35 @@ function showTemperature(jsondata) {
     }).addTo(overlays.temperatur);
 }
 
-console.log(COLORS);
+//console.log(COLORS);
 function getColor(value, ramp) {
     for (let rule of ramp) {
-        console.log("rule" , rule);
         if (value >= rule.min && value < rule.max) {
             return rule.color;
         }
-        }
+    }
 }
-let testColor = getColor(-3, COLORS.temperature);
-console.log("testColor für temp -3" , testColor);
+
+//Wind daten anzeigen
+
+function showWind(jsondata) {
+    //To do: darstellen von wind daten
+    L.geoJSON(jsondata, {
+        filter: function (feature) {
+            if (feature.properties.WG > 0 && feature.properties.WG < 200) {
+                return true;
+            }
+        },
+        pointToLayer: function (feature, latlng) {
+            let color = getColor(feature.properties.WG, COLORS.wind);
+            console.log(color)
+            return L.marker(latlng, {
+                icon: L.divIcon({
+                    className: "aws-div-icon",
+                    html: `<span style="background-color:${color}">${feature.properties.WG.toFixed(0)}</span>`
+                }),
+            })
+        }
+
+    }).addTo(overlays.wind);
+}
