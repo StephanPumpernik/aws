@@ -12,8 +12,8 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 
 // thematische Layer
 let overlays = {
-    stations: L.featureGroup().addTo(map),
-    temperatur: L.featureGroup(),
+    stations: L.featureGroup(),
+    temperatur: L.featureGroup().addTo(map),
 }
 
 // Layer control
@@ -83,7 +83,7 @@ function showTemperature(jsondata) {
     //To do: darstellen von temperatur daten
     L.geoJSON(jsondata, {
         filter: function(feature) {
-            if (feature.properties.LT > 10 && feature.properties.LT < 50) {
+            if (feature.properties.LT > -50 && feature.properties.LT < 50) {
                 return true;
             }
         },
