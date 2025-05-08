@@ -73,7 +73,23 @@ async function loadStations(url) {
 
     }
 
-}).addTo(overlays.stations);
+}).addTo(overlays.stations)
+showTemperature(jsondata);
     
 }
 loadStations("https://static.avalanche.report/weather_stations/stations.geojson");
+
+function showTemperature(jsondata) {
+    //To do: darstellen von temperatur daten
+    L.geoJSON(jsondata, {
+        pointToLayer: function(feature, latlng) {
+            return L.marker(latlng, {
+                icon: L.divIcon({
+                    className: "aws-div-icon",
+                    html: `<span>${feature.properties.LT}</span>`
+                }),
+            })
+        }
+
+    }).addTo(overlays.temperatur);
+}
