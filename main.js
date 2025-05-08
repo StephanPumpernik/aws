@@ -13,6 +13,7 @@ let map = L.map("map").setView([ibk.lat, ibk.lng], ibk.zoom);
 // thematische Layer
 let overlays = {
     stations: L.featureGroup().addTo(map),
+    temperatur: L.featureGroup(),
 }
 
 // Layer control
@@ -26,6 +27,7 @@ L.control.layers({
     "Esri WorldImagery": L.tileLayer.provider("Esri.WorldImagery"),
 }, {
     "Wetterstationen": overlays.stations,
+    "Temperatur": overlays.temperatur,
 }).addTo(map);
 
 // Maßstab
@@ -55,7 +57,7 @@ async function loadStations(url) {
 
     onEachFeature: function (feature, layer) {
         let pointINTime = new Date(feature.properties.date);
-        console.log(pointINTime);
+        //console.log(pointINTime);
         layer.bindPopup(`
             <h4> ${feature.properties.name} (${feature.geometry.coordinates[2]}m)</h4>
             <ul>
