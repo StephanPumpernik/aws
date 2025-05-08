@@ -65,7 +65,7 @@ async function loadStations(url) {
             <li>Windgeschwindigkeit (km/h) ${feature.properties.WG || "-"}</li>
             <li>Schneehöhe (cm) ${feature.properties.HS || "-"}</li>
             </ul>
-            <span>${feature.properties.toLocaleString()}</span>
+            <span>${pointINTime.toLocaleString()}</span>
         `);
 
 
