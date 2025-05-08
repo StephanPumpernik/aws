@@ -33,7 +33,7 @@ L.control.scale({
     imperial: false,
 }).addTo(map);
 
-// Wetterstationen
+// Wetterstationen mit marker und popup mit seehöhe
 async function loadStations(url) {
     console.log(url);
     let response = await fetch(url);
