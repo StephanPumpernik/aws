@@ -41,7 +41,7 @@ async function loadStations(url) {
 
     console.log(jsondata);
     L.geoJSON (jsondata, { 
-    attribution: "Datenquelle: <a href= 'Stadt Wien' https://data.wien.gv.at> Stadt Wien <a/>",
+   
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: L.icon({
@@ -56,6 +56,13 @@ async function loadStations(url) {
     onEachFeature: function (feature, layer) {
         layer.bindPopup(`
             <h4> ${feature.properties.name} (${feature.geometry.coordinates[2]}m)</h4>
+            <ul>
+            <li>Lufttemperatur(C) ${feature.properties.LT !== undefined ? feature.properties.LT : "-"}</li>
+            <li>Luftfeuchte (%) ${feature.properties.RH || "-"}</li>
+            <li>Windgeschwindigkeit (km/h) ${feature.properties.WG || "-"}</li>
+            <li>Schneehöhe (cm) ${feature.properties.HS || "-"}</li>
+            </ul>
+            <span></span>
         `);
 
 
