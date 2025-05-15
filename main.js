@@ -169,7 +169,7 @@ function showSnow(jsondata) {
             //console.log(hans)
             return L.marker(latlng, {
                 icon: L.divIcon({
-                    className: "aws-div-icon",
+                    className: "aws-div-icon-snow",
                     html: `<span style="background-color:${color}">${feature.properties.HS.toFixed(0)}</span>`
                 }),
             })
@@ -193,8 +193,8 @@ function showDirection(jsondata) {
             //console.log(hans)
             return L.marker(latlng, {
                 icon: L.divIcon({
-                    className: "aws-div-icon",
-                    html: `<span style="transform:rotate(${feature.properties.WR}deg);background-color:${color}"><i class="fa-solid fa-circle-arrow-down"></i></span>`
+                    className: "aws-div-icon-wind",
+                    html: `<span ><i style="transform:rotate(${feature.properties.WR}deg);color:${color}"class="fa-solid fa-circle-arrow-down"></i></span>`
                 }),
             })
         }
